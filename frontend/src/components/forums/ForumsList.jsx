@@ -5,26 +5,13 @@ import ForumItem from './ForumItem'
 /* ------------------------------- COMPONENTS ------------------------------- */
 import Loader from '../utils/Loader'
 
-const URI = process.env.REACT_APP_URI
 
 
-const ForumsList = () => {
-    const [listaForos, setListaForos] = useState(false);
-
-    const getForos = async() => {
-        const res = await fetch(`${URI}/forums`)
-        const data = await res.json()
-        console.log(data)
-        setListaForos(data)
-    }
-
-    useEffect(()=>{
-
-        getForos()
-
-    }, [])
+const ForumsList = ({listaForos}) => {
+    
+    
     return (
-        <Container className='row p-0 m-0'>
+        <Container className='p-0 m-0'>
 
 
             {
@@ -33,7 +20,7 @@ const ForumsList = () => {
                     <Loader/>
 
                 ):(
-                    listaForos.map((item)=><ForumItem key={item[0]} id={item[0]} autor={item[1]} cuerpo={item[2]} titulo={item[3]} subtitulo={item[4]} fecha={item[5]}  />)
+                    listaForos.map((item)=><ForumItem key={item[0]} id={item[0]} autor={item[1]} cuerpo={item[4]} titulo={item[2]} subtitulo={item[3]} fecha={item[6]} categoria={item[5]}  />)
                 )
             }
         </Container>

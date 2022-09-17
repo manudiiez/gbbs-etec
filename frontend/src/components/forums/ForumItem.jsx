@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import {useNavigate} from 'react-router-dom'
 
 
-const ForumItem = ({id, autor, cuerpo, titulo, subtitulo, fecha}) => {
+const ForumItem = ({id, autor, categoria, titulo, subtitulo, fecha}) => {
 
     const navigate = useNavigate()
 
@@ -37,8 +37,9 @@ const ForumItem = ({id, autor, cuerpo, titulo, subtitulo, fecha}) => {
                     <h5 className="card-title">{titulo}</h5>
                     <p className="card-text">{subtitulo}</p>
                 </div>
-                <div className="card-footer">
-                    <p className='text-end m-0'>02 - 09 - 2022</p>
+                <div className="card-footer d-flex justify-content-between">
+                    <p className='text-end m-0'>{categoria}</p>
+                    <p className='text-end m-0'>{fecha}</p>
                 </div>
             </div>
         </Container>
@@ -52,6 +53,7 @@ const Container = styled.div`
     background: #fff;
     border-radius: 5px;
     transition: all .5s ease;    
+    height: auto;
 
     img{
         width: 100%;

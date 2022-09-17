@@ -15,14 +15,25 @@ import { UserContext } from '../context/userContext';
 import Swal from 'sweetalert2';
 /* ---------------------------- REACT-ROUTER-DOM ---------------------------- */
 import { useNavigate } from 'react-router-dom';
+import Select from 'react-select'
+
 
 
 const URI = process.env.REACT_APP_URI
 
+const options = [
+    { value: 'antenas', label: 'Antenas' },
+    { value: 'noticias', label: 'Noticias' },
+    { value: 'espacio', label: 'Espacio' },
+    { value: 'tutoriales', label: 'Tutoriales' }
+    
+  ]
 
-const Filter = () => {
+
+const Filter = ({getMyForos, getForos, setSearch}) => {
 
     const {user} = useContext(UserContext)
+    const [input, setInput] = useState('');
     const navigate = useNavigate()
 
     const [state, setState] = useState(false);
@@ -30,12 +41,19 @@ const Filter = () => {
     const [newForm, setNewForm] = useState({
         titulo: '',
         subtitulo: '',
-        cuerpo: ''
+        cuerpo: '',
+        categoria: ''
     });
 
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const handleChangeInput = (e) => {
+        if(e.keyCode == 13 || e.keyCode == 32){
+            setSearch(input)
+        }
+    }
   
 
     const handleClick = () => {
@@ -51,12 +69,17 @@ const Filter = () => {
 
     const createNewForm = async(e) => {
         e.preventDefault()
+        let date = new Date();
+        let output = String(date.getDate()).padStart(2, '0') + '/' + String(date.getMonth() + 1).padStart(2, '0') + '/' + date.getFullYear();
+        console.log(output);
         if(user){
             if(newForm.titulo || newForm.subtitulo || newForm.cuerpo){
                 const titulo = newForm.titulo
                 const subtitulo = newForm.subtitulo
                 const cuerpo = newForm.cuerpo
                 const autor = user.nombre_usuario
+                const categoria = newForm.categoria
+                const fecha = output
                 const res = await fetch(`${URI}/add_forum`, {
                     method: 'POST',
                     headers: {
@@ -66,7 +89,9 @@ const Filter = () => {
                       titulo,
                       subtitulo,
                       cuerpo,
-                      autor
+                      autor,
+                      categoria,
+                      fecha
                     })
                 })
                 const data = await res.json()
@@ -104,7 +129,7 @@ const Filter = () => {
     return (
         <Container className='p-2'>
             <ContainerSearch className='d-flex justify-content-center align-items-center'>
-                <input type="text" className='form-control' placeholder='Buscar...' />
+                <input type="text" className='form-control' onKeyUp={(e) => {handleChangeInput(e)}} onChange={(e) => {setInput(e.target.value)}}  placeholder='Buscar...' />
                 <button className='mx-1 p-1 px-2' onClick={handleClick}>
                     <FontAwesomeIcon icon={faBars} />
                 </button>
@@ -114,10 +139,11 @@ const Filter = () => {
                 <Accordion defaultActiveKey="0" className='w-100' alwaysOpen>
                     <FilterItem eventKey='0' title='Categorias'>
                         <ul className="list-group">
-                            <button className="list-group-item">Todos</button>
-                            <button className="list-group-item">Antenas</button>
-                            <button className="list-group-item">Noticias</button>
-                            <button className="list-group-item">Espacio</button>
+                            <button className="list-group-item" onClick={() => {getForos('todos')}}>Todos</button>
+                            <button className="list-group-item" onClick={() => {getForos('antenas')}}>Antenas</button>
+                            <button className="list-group-item" onClick={() => {getForos('noticias')}}>Noticias</button>
+                            <button className="list-group-item" onClick={() => {getForos('espacio')}}>Espacio</button>
+                            <button className="list-group-item" onClick={() => {getForos('tutoriales')}}>Tutoriales</button>
                         </ul>
                     </FilterItem>
                     <FilterItem eventKey='2' title='Mis Foros'>
@@ -125,7 +151,7 @@ const Filter = () => {
                             <Button className="list-group-item" onClick={handleShow}>
                                 Crear un foro
                             </Button>
-                            <button className="list-group-item">Mis foros</button>
+                            <button className="list-group-item" onClick={() => {getMyForos()}}>Mis foros</button>
                         </ul>
                     </FilterItem>
                 </Accordion>
@@ -137,12 +163,16 @@ const Filter = () => {
                 <Modal.Body>
                     <form onSubmit={createNewForm}>
                         <div className="mb-3">
+                            <label htmlFor="exampleFormControlInput1" className="form-label">Categoria</label>
+                            <Select options={options} name='category' onChange={(e) => {setNewForm({...newForm, ['categoria']: e.value})}}/>
+                        </div>
+                        <div className="mb-3">
                             <label htmlFor="exampleFormControlInput1" className="form-label">Titulo del foro</label>
-                            <input type="text" className="form-control" maxLength='50' id="exampleFormControlInput1" name='titulo' onChange={handleChange}/>
+                            <input type="text" className="form-control" maxLength='150' id="exampleFormControlInput1" name='titulo' onChange={handleChange}/>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="exampleFormControlInput1" className="form-label">Subtitulo</label>
-                            <input type="text" className="form-control" maxLength='100' id="exampleFormControlInput1" name='subtitulo' onChange={handleChange}/>
+                            <input type="text" className="form-control" maxLength='150' id="exampleFormControlInput1" name='subtitulo' onChange={handleChange}/>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="exampleFormControlTextarea1" className="form-label">Descripcion del foro</label>
@@ -184,6 +214,9 @@ const ContainerSearch = styled.div`
         &:hover{
             background: #ced4da;
             color: #fff;
+        }
+        @media (min-width: 992px) {
+            display: none;
         }
     }
 

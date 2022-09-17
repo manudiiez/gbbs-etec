@@ -3,9 +3,6 @@ import React,{useEffect, useState} from 'react'
 import styled from 'styled-components'
 /* --------------------------------- IMAGES --------------------------------- */
 import img from '../../images/radioaficion.jpg'
-/* ------------------------------- FONTAWESOME ------------------------------ */
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
 /* ---------------------------- REACT-ROUTER-DOM ---------------------------- */
 import { useParams } from 'react-router-dom'
 /* ------------------------------- COMPONENTS ------------------------------- */
