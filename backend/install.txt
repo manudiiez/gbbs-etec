@@ -1,0 +1,1 @@
+pip install flask_socketio flask flask_mysqldb flask_cors flask-WTF python-dotenv pyjwt requests
