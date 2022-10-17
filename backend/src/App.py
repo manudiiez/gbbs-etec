@@ -1,3 +1,4 @@
+from unicodedata import category
 from flask import Flask, request, url_for, jsonify
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO
@@ -202,13 +203,26 @@ def user_auth():
         
         
 # ------------------------------- OBTENER FOROS ------------------------------ #
-@app.route('/forums')
+@app.route('/forums', methods=['POST'])
 def forums():
-    cur = db.connection.cursor()
-    cur.execute('SELECT * FROM foro')
-    data = cur.fetchall()
-    print(data)
-    return jsonify(data)
+    if request.method == 'POST':
+        categoria = request.json['categoria']
+        input = request.json['input']
+        print(categoria)
+        cur = db.connection.cursor()
+        if categoria == '':
+            query = 'SELECT * FROM foro'
+        else:
+            query = 'SELECT * FROM foro WHERE (categoria =' + '"' + categoria + '"' + ')'
+        if input !='':
+            if categoria == 'todos':
+                query += ' WHERE ((titulo LIKE ' + '"%' + input + '%"' + ') OR (autor LIKE ' + '"%' + input + '%"' + ') OR (subtitulo LIKE ' + '"%' + input + '%"' + ') OR (cuerpo LIKE ' + '"%' + input + '%"' + ') OR (categoria LIKE ' + '"%' + input + '%"' + ') OR (fecha LIKE ' + '"%' + input + '%"' + '))'
+            else:
+                query += ' AND ((titulo LIKE ' + '"%' + input + '%"' + ') OR (autor LIKE ' + '"%' + input + '%"' + ') OR (subtitulo LIKE ' + '"%' + input + '%"' + ') OR (cuerpo LIKE ' + '"%' + input + '%"' + ') OR (categoria LIKE ' + '"%' + input + '%"' + ') OR (fecha LIKE ' + '"%' + input + '%"' + '))'
+        print(query)
+        cur.execute(query)
+        data = cur.fetchall()
+        return jsonify(data)
 
 # --------------------------- OBTENER FORO SEGUN ID -------------------------- #
 @app.route('/forum/<id>')
@@ -222,10 +236,11 @@ def forum(id):
     return jsonify({
         'id': data[0],
         'autor': data[1],
-        'cuerpo': data[2],
-        'titulo': data[3],
-        'subtitulo': data[4],
-        'fecha': data[5]
+        'cuerpo': data[4],
+        'titulo': data[2],
+        'subtitulo': data[3],
+        'categoria': data[5],
+        'fecha': data[6]
     })
 
 # -------------------------------- CREAR FORO -------------------------------- #
@@ -247,12 +262,14 @@ def add_forums():
         subtitulo = request.json['subtitulo']
         cuerpo = request.json['cuerpo']
         autor = request.json['autor']
+        categoria = request.json['categoria']
+        fecha = request.json['fecha']
         cur = db.connection.cursor()
         cur.execute('SELECT * FROM foro WHERE titulo = ' + '"' + titulo + '"')
         foro_existente = cur.rowcount
         if foro_existente <= 0:
-            cur.execute('INSERT INTO foro (autor, cuerpo, titulo, subtitulo ) VALUES (%s, %s, %s, %s)', 
-            (autor, cuerpo, titulo, subtitulo))
+            cur.execute('INSERT INTO foro (autor, cuerpo, titulo, subtitulo, categoria, fecha ) VALUES (%s, %s, %s, %s, %s, %s)', 
+            (autor, cuerpo, titulo, subtitulo, categoria, fecha))
             db.connection.commit()
             return jsonify({
                 'alertTitle': 'Bien hecho',
@@ -271,6 +288,15 @@ def add_forums():
                 'timer': False,
                 'ruta': ''
             })
+# ----------------------------- OBTENER MIS FOROS ---------------------------- #
+@app.route('/get_my_forums', methods=['POST'])
+def get_my_forums():
+    if request.method == 'POST':
+        username = request.json['username']
+        cur = db.connection.cursor()
+        cur.execute('SELECT * FROM foro WHERE autor = ' + '"' + username + '"')
+        data = cur.fetchall()
+        return jsonify(data)
 
 
 # ---------------- CREAMOS EL BUCLE PRINCIPLA DE LA APLICACION --------------- #

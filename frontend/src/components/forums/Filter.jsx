@@ -140,7 +140,7 @@ const Filter = ({getMyForos, getForos, setSearch}) => {
                 <Accordion defaultActiveKey="0" className='w-100' alwaysOpen>
                     <FilterItem eventKey='0' title='Categorias'>
                         <ul className="list-group">
-                            <button className="list-group-item" onClick={() => {getForos('todos')}}>Todos</button>
+                            <button className="list-group-item" onClick={() => {getForos('')}}>Todos</button>
                             <button className="list-group-item" onClick={() => {getForos('antenas')}}>Antenas</button>
                             <button className="list-group-item" onClick={() => {getForos('noticias')}}>Noticias</button>
                             <button className="list-group-item" onClick={() => {getForos('espacio')}}>Espacio</button>

@@ -51,9 +51,7 @@ const Forums = () => {
     }
 
     useEffect(()=>{
-
-        getForos('todos')
-
+        getForos('')
     }, [])
 
     useEffect(()=>{
