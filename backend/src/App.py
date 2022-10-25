@@ -298,6 +298,25 @@ def get_my_forums():
         data = cur.fetchall()
         return jsonify(data)
 
+# ------------------------------- COMENTAR FORO ------------------------------ #
+@app.route('/add_comment', methods=['POST'])
+def add_comment():
+    if request.method == 'POST':
+        autor = request.json['autor']
+        comentario = request.json['comentario']
+        cur = db.connection.cursor()
+        cur.execute('INSERT INTO comentario(autor, comentario) VALUES(%s, %s)',(autor, comentario))
+
+
+# ----------------------------- OBTENER COMENTARIOS ---------------------------- #
+@app.route('/get_comments', methods=['POST'])
+def get_comments():
+    if request.method == 'POST':
+        username = request.json['username']
+        cur = db.connection.cursor()
+        cur.execute('SELECT * FROM comentario WHERE id != 0')
+        data = cur.fetchall()
+        return jsonify(data)
 
 # ---------------- CREAMOS EL BUCLE PRINCIPLA DE LA APLICACION --------------- #
 if (__name__) == '__main__':
