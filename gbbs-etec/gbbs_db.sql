@@ -99,21 +99,6 @@ INSERT INTO `usuario` (`id`, `nombre_completo`, `email`, `contraseña`, `nombre_
 (18, 'manu diez de oñate', 'manu@manu.com', 'sha256$s61fL949RBw6au2K$27a5d64760c526707b5960cff241d9a228bf77ec6ec49670f3acc72b256b9881', 'manudiiez', '/static/img/default-A.png'),
 (19, '123123 123123', '123@123.com', 'sha256$SuogHUG6Rj6aa4qT$a4d34a8bde09c10d614dd8d64651e3fd0e889ea17613e5000aba71b7dedab499', '123123', '/static/img/default-A.png');
 
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `comentario`
---
-
-CREATE TABLE `comentario` (
-  `id` int(11) NOT NULL,
-  `autor` varchar(100) NOT NULL,
-  `comentario` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
 --
 -- Índices para tablas volcadas
 --
@@ -130,9 +115,6 @@ ALTER TABLE `foro`
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id`);
 
-
-ALTER TABLE `comentario`
-  ADD PRIMARY KEY (`id`);
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
@@ -143,9 +125,6 @@ ALTER TABLE `comentario`
 ALTER TABLE `foro`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
-
-ALTER TABLE `comentario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --

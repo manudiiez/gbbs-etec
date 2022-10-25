@@ -1,0 +1,1 @@
+npm i react-router-dom@6 styled-components sweetalert2 universal-cookie @fortawesome/free-brands-svg-icons @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome bootstrap react-bootstrap jsonwebtoken react-jwt
